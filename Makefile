@@ -1,4 +1,5 @@
-.PHONY: test bin docker debug
+.PHONY: bin all clean
+
 default:
 	$(MAKE) all
 bin:

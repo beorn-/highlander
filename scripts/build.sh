@@ -26,4 +26,5 @@ for bin in *; do
   set -x
   go build -o $BUILDDIR/$bin || fail
   set +x
+  cd -
 done
