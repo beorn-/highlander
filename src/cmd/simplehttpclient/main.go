@@ -9,7 +9,7 @@ import (
 
 func main() {
 	for {
-		r, err := http.NewRequest("GET", "http://localhost:8091", nil)
+		r, err := http.NewRequest("GET", "http://localhost:9091", nil)
 		if err != nil {
 			panic(err)
 		}
