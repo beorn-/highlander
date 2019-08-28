@@ -31,7 +31,12 @@ func NewHighlanderProxy(checkInterval, expirationInterval time.Duration) *Highla
 }
 
 func (f *HighlanderProxy) RoundTrip(r *http.Request) (*http.Response, error) {
-	caller := r.Header.Get("X-Caller")
+	caller := r.RemoteAddr
+
+	if caller == cmd.preferredIp {
+		f.allowed = caller
+	}
+
 	if f.allowed == "" {
 		f.allowed = caller
 	}
