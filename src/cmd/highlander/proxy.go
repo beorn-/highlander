@@ -2,6 +2,7 @@ package main
 
 import (
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -35,10 +36,12 @@ func (f *HighlanderProxy) RoundTrip(r *http.Request) (*http.Response, error) {
 
 	if caller == cmd.preferredIp {
 		f.allowed = caller
+		log.Println("new source : '" + caller + "' (preferred ip)")
 	}
 
 	if f.allowed == "" {
 		f.allowed = caller
+		log.Println("new source : '" + caller + "' (no current promoted source")
 	}
 
 	if caller != f.allowed {
