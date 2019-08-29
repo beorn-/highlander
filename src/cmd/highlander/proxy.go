@@ -65,5 +65,7 @@ func (f *HighlanderProxy) RoundTrip(r *http.Request) (*http.Response, error) {
 
 	f.lastCall = time.Now()
 
+	r.Header.Add("X-Highlander-Instance", strconv.FormatUint(cmd.instanceID, 10))
+
 	return http.DefaultTransport.RoundTrip(r)
 }

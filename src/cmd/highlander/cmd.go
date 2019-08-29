@@ -10,6 +10,7 @@ type Cmd struct {
 	remote       string
 	healthTick   time.Duration
 	healthExpiry time.Duration
+	instanceID   uint64
 }
 
 func parseCmd() Cmd {
@@ -18,6 +19,7 @@ func parseCmd() Cmd {
 	flag.DurationVar(&cmd.healthExpiry, "e", 5*time.Second, "disable stream after n seconds of inactivity")
 	flag.StringVar(&cmd.bind, "l", "0.0.0.0:9091", "listen on ip:port")
 	flag.StringVar(&cmd.remote, "r", "http://localhost:9090", "reverse proxy addr")
+	flag.Uint64Var(&cmd.instanceID, "i", 1, "InstanceID")
 	flag.Parse()
 	return cmd
 }

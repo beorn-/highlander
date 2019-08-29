@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"strconv"
 )
 
 var cmd Cmd
@@ -16,6 +17,7 @@ func main() {
 	log.Println("remote address: " + cmd.remote)
 	log.Println("health tick: " + cmd.healthTick.String())
 	log.Println("health expiry: " + cmd.healthExpiry.String())
+	log.Println("instance ID: " + strconv.FormatUint(cmd.instanceID, 10))
 
 	u, err := url.Parse(cmd.remote)
 	if err != nil {

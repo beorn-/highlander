@@ -20,6 +20,7 @@ func main() {
 		}
 
 		r.Header.Set("X-Highlander-Weight", os.Args[1])
+		r.Header.Set("User-Agent", "SimpleHttpClient/0.1")
 
 		res, err := http.DefaultClient.Do(r)
 		if err != nil {
