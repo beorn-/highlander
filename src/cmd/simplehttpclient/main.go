@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -14,12 +15,12 @@ func main() {
 		panic("Syntax error: " + os.Args[0] + " <weight>")
 	}
 	for {
-		r, err := http.NewRequest("GET", "http://localhost:9091", nil)
+		remoteUrl := fmt.Sprintf("http://localhost:9091/?highlander_weight=%s", os.Args[1])
+		r, err := http.NewRequest("GET", remoteUrl, nil)
 		if err != nil {
 			panic(err)
 		}
 
-		r.Header.Set("X-Highlander-Weight", os.Args[1])
 		r.Header.Set("User-Agent", "SimpleHttpClient/0.1")
 
 		res, err := http.DefaultClient.Do(r)

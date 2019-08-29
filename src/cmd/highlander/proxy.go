@@ -37,14 +37,21 @@ func NewHighlanderProxy(checkInterval, expirationInterval time.Duration) *Highla
 
 func (f *HighlanderProxy) RoundTrip(r *http.Request) (*http.Response, error) {
 	caller := r.RemoteAddr
+	var weight uint64
+	var err error
 
-	weight, err := strconv.ParseUint(r.Header.Get("X-Highlander-Weight"), 10, 64)
-	if err != nil {
+	keys, ok := r.URL.Query()["highlander_weight"]
+	if !ok {
 		weight = 0
+	} else {
+		weight, err = strconv.ParseUint(keys[0], 10, 64)
+		if err != nil {
+			weight = 0
+		}
 	}
 
 	if weight > f.weight {
-		log.Printf("new source : '%s' (bigger X-Highlander-Weight) (%d -> %d)\n", caller, f.weight, weight)
+		log.Printf("new source : '%s' (bigger Highlander Weight) (%d -> %d)\n", caller, f.weight, weight)
 		f.allowed = caller
 		f.weight = weight
 	}

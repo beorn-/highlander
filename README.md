@@ -20,8 +20,8 @@ When you already have high cardinality and a finite budget allocated to observab
 ## What Highlander proxy is
 
 * Highlander is a L4 reverse proxy accepting `n` connections
-* Highlander picks the first available connection and stores its uint64 `X-Highlander-Weight` header
-* Highlander prefers any new connection with a bigger uint64 value in the `X-Highlander-Weight` header
+* Highlander picks the first available connection and stores its uint64 `highlander_weight` url parameter
+* Highlander prefers any new connection with a bigger uint64 value in the `highlander_weight` url parameter
 * Highlander outputs to one `remote_write` compatible external endpoint
 
 ## What Highlander proxy will be
@@ -49,10 +49,12 @@ if prometheus A fails to push then highlander would pick another source
 ## Sample Log
 
 ```
-2019/08/29 11:51:28 binding address: 0.0.0.0:9091
-2019/08/29 11:51:28 remote address: http://localhost:9090
-2019/08/29 11:51:28 health tick: 1s
-2019/08/29 11:51:28 health expiry: 5s
-2019/08/29 11:51:28 new source : '127.0.0.1:43358' (bigger X-Highlander-Weight) (0 -> 10)
-2019/08/29 11:51:28 new source : '127.0.0.1:43362' (bigger X-Highlander-Weight) (10 -> 100)
+2019/08/29 17:03:43 binding address: 0.0.0.0:9091
+2019/08/29 17:03:43 remote address: http://localhost:9090
+2019/08/29 17:03:43 health tick: 1s
+2019/08/29 17:03:43 health expiry: 5s
+2019/08/29 17:03:43 instance ID: 1
+2019/08/29 17:03:44 new source : '127.0.0.1:48876' (bigger Highlander Weight) (0 -> 50)
+2019/08/29 17:03:55 lost source : '127.0.0.1:48876' (no data for 5s)
+2019/08/29 17:03:56 new source : '127.0.0.1:48880' (no current promoted source) (0)
 ```
