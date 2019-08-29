@@ -16,7 +16,6 @@ func main() {
 	log.Println("remote address: " + cmd.remote)
 	log.Println("health tick: " + cmd.healthTick.String())
 	log.Println("health expiry: " + cmd.healthExpiry.String())
-	log.Println("preferred ip: " + cmd.preferredIp)
 
 	u, err := url.Parse(cmd.remote)
 	if err != nil {

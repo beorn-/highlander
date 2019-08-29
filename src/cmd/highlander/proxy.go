@@ -4,12 +4,14 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
 
 type HighlanderProxy struct {
 	allowed  string
+	weight   uint64
 	lastCall time.Time
 }
 
@@ -34,14 +36,21 @@ func NewHighlanderProxy(checkInterval, expirationInterval time.Duration) *Highla
 func (f *HighlanderProxy) RoundTrip(r *http.Request) (*http.Response, error) {
 	caller := r.RemoteAddr
 
-	if caller == cmd.preferredIp {
+	weight, err := strconv.ParseUint(r.Header.Get("X-Highlander-Weight"), 10, 64)
+	if err != nil {
+		weight = 0
+	}
+
+	if weight > f.weight {
+		log.Printf("new source : '%s' (bigger X-Highlander-Weight) (%d -> %d)\n", caller, f.weight, weight)
 		f.allowed = caller
-		log.Println("new source : '" + caller + "' (preferred ip)")
+		f.weight = weight
 	}
 
 	if f.allowed == "" {
+		log.Printf("new source : '%s' (no current promoted source) (%d)\n", caller, weight)
 		f.allowed = caller
-		log.Println("new source : '" + caller + "' (no current promoted source")
+		f.weight = weight
 	}
 
 	if caller != f.allowed {
