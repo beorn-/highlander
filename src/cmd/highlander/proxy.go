@@ -24,7 +24,9 @@ func NewHighlanderProxy(checkInterval, expirationInterval time.Duration) *Highla
 			select {
 			case <-t.C:
 				if f.lastCall.Before(time.Now().Add(-expirationInterval)) {
+					log.Printf("lost source : '%s' (no data for %s)\n", f.allowed, expirationInterval.String())
 					f.allowed = ""
+					f.weight = 0
 				}
 			}
 		}

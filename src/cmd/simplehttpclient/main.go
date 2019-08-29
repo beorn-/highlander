@@ -1,6 +1,8 @@
 package main
 
 import (
+	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -20,8 +22,13 @@ func main() {
 		r.Header.Set("X-Highlander-Weight", os.Args[1])
 
 		res, err := http.DefaultClient.Do(r)
-
-		log.Println(res, err)
+		if err != nil {
+			log.Println("Could not reach server", err)
+		} else {
+			log.Println(res)
+			io.Copy(ioutil.Discard, res.Body)
+			res.Body.Close()
+		}
 		time.Sleep(1 * time.Second)
 	}
 }
