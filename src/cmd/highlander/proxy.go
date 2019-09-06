@@ -11,12 +11,13 @@ import (
 
 type HighlanderProxy struct {
 	allowed  string
+	isLeader func() bool
 	weight   uint64
 	lastCall time.Time
 }
 
-func NewHighlanderProxy(checkInterval, expirationInterval time.Duration) *HighlanderProxy {
-	f := &HighlanderProxy{}
+func NewHighlanderProxy(checkInterval, expirationInterval time.Duration, isLeader func() bool) *HighlanderProxy {
+	f := &HighlanderProxy{isLeader: isLeader}
 
 	go func() {
 		t := time.NewTicker(checkInterval)
@@ -62,7 +63,7 @@ func (f *HighlanderProxy) RoundTrip(r *http.Request) (*http.Response, error) {
 		f.weight = weight
 	}
 
-	if caller != f.allowed {
+	if caller != f.allowed || !f.isLeader() {
 		return &http.Response{
 			StatusCode: http.StatusOK,
 			Body:       ioutil.NopCloser(strings.NewReader("ok")),
@@ -72,7 +73,7 @@ func (f *HighlanderProxy) RoundTrip(r *http.Request) (*http.Response, error) {
 
 	f.lastCall = time.Now()
 
-	r.Header.Add("X-Highlander-Instance", strconv.FormatUint(cmd.instanceID, 10))
+	r.Header.Add("X-Highlander-Instance", cmd.instanceID)
 
 	return http.DefaultTransport.RoundTrip(r)
 }

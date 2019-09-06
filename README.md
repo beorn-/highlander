@@ -1,5 +1,5 @@
 # highlander proxy
-Reverse proxy handling HA for prometheus server groups `remote_write` feature.
+Highly available reverse proxy handling HA for prometheus server groups `remote_write` feature.
 
 "There Can Be Only One".
 
@@ -19,7 +19,8 @@ When you already have high cardinality and a finite budget allocated to observab
 
 ## What Highlander proxy is
 
-* Highlander is a L4 reverse proxy accepting `n` connections
+* Highlander is a highly available L4 reverse proxy accepting `n` connections
+* Highlander uses hashicorp `memberlist` golang library for clustering/leader election
 * Highlander picks the first available connection and stores its uint64 `highlander_weight` url parameter
 * Highlander prefers any new connection with a bigger uint64 value in the `highlander_weight` url parameter
 * Highlander outputs to one `remote_write` compatible external endpoint
