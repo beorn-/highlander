@@ -31,31 +31,39 @@ When you already have high cardinality and a finite budget allocated to observab
 * Highlander will buffers data
 * Highlander will outputs one or many  `remote_write` compatible external endpoint
 
-## Architecture schema
+## Architecture schema (standalone)
 
 ```
-[prometheus A]--------|-------------|
-[prometheus B]--------| highlander  |------(remote_write A)-----------> [prometheus compatible LTS]
-[prometheus C]--------|     proxy   |
-[prometheus D]--------|-------------|
+[prometheus A]---|-------------|
+[prometheus B]---| highlander  |--(remote_write A)--> [prometheus compatible LTS]
+[prometheus C]---|     proxy   |
+[prometheus D]---|-------------|
 ```
 if prometheus A fails to push then highlander would pick another source
 ```
-[prometheus A]---x    |-------------|
-[prometheus B]--------| highlander  |------(remote_write B)-----------> [prometheus compatible LTS]
-[prometheus C]--------|     proxy   |
-[prometheus D]--------|-------------|
+[prometheus A]-x |-------------|
+[prometheus B]---| highlander  |--(remote_write B)--> [prometheus compatible LTS]
+[prometheus C]---|     proxy   |
+[prometheus D]---|-------------|
 ```
+
+## Architecture schema (clustered 2 nodes)
+
+```
+
+  /-------------------------------[prometheus compatible LTS]-------------------------------\
+  |                                                                                         |
+  |                     |-------------|--[prometheus A]--|-------------|                    |
+  --(remote_write A)   x| highlander  |--[prometheus B]--| highlander  |--(remote_write A)--/
+                        | not Leader  |--[prometheus C]--|     Leader  |
+                        |-------------|--[prometheus D]--|-------------|
+                                |                               |
+                                \----------(HA sync)------------/
+```
+
 
 ## Sample Log
 
 ```
-2019/08/29 17:03:43 binding address: 0.0.0.0:9091
-2019/08/29 17:03:43 remote address: http://localhost:9090
-2019/08/29 17:03:43 health tick: 1s
-2019/08/29 17:03:43 health expiry: 5s
-2019/08/29 17:03:43 instance ID: 1
-2019/08/29 17:03:44 new source : '127.0.0.1:48876' (bigger Highlander Weight) (0 -> 50)
-2019/08/29 17:03:55 lost source : '127.0.0.1:48876' (no data for 5s)
-2019/08/29 17:03:56 new source : '127.0.0.1:48880' (no current promoted source) (0)
+XXX: Add missing logs here
 ```
