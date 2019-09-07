@@ -8,4 +8,4 @@ all:
 	$(MAKE) bin
 
 clean:
-	rm build/*
+	rm -f build/*
