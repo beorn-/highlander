@@ -1,0 +1,22 @@
+# .circleci/config.yml
+version: 2
+jobs:
+  release:
+    docker:
+        - image: circleci/golang:1.12
+    steps:
+      - checkout
+      - run: go get ./...
+      - run: mkdir gopath
+      - run: export GOPATH=`pwd`/gopath
+      - run: curl -sL https://git.io/goreleaser | bash
+workflows:
+  version: 2
+  release:
+    jobs:
+      - release:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*(-.*)*/
