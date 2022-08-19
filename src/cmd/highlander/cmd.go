@@ -15,6 +15,8 @@ type Cmd struct {
 	instanceID     string
 	clusterConnect string
 	clusterBind    string
+	remoteUser     string
+	remotePassword string
 }
 
 func parseCmd() Cmd {
@@ -27,6 +29,8 @@ func parseCmd() Cmd {
 	flag.StringVar(&cmd.bind, "l", "0.0.0.0:9091", "listen on ip:port")
 	flag.StringVar(&cmd.remote, "r", "http://localhost:9090", "reverse proxy addr")
 	flag.StringVar(&cmd.instanceID, "i", "", "InstanceID is a uuid, used among other things, for clustering")
+	flag.StringVar(&cmd.remoteUser, "u", "", "reverse proxy login user")
+	flag.StringVar(&cmd.remotePassword, "p", "", "reverse proxy login password")
 
 	// clustering
 	flag.StringVar(&cmd.clusterConnect, "c", "", "comma separated list of ip:port combinations that can be use for joining the cluster. Not joining if empty string")
