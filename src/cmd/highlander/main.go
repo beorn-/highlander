@@ -10,7 +10,7 @@ import (
 )
 
 var cmd Cmd
-var version = "0.1.1"
+var version = "0.1.2"
 
 // like httputil.NewSingleHostReverseProxy but with BasicAuth and Host header rewrite
 func NewSingleHostAuthReverseProxy(target *url.URL, user string, pass string) *httputil.ReverseProxy {
